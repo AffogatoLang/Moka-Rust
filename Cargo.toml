@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Louis Capitanchik <ljcapitanio@gmail.com>"]
 
 [lib]
-name="mokafunc"
+name="moka"
 
 [[bin]]
 name="moka"
@@ -12,3 +12,4 @@ name="moka"
 [dependencies]
 docopt = "0.6"
 rustc-serialize = "0.3"
+regex = "0.1"

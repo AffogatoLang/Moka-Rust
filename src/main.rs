@@ -1,5 +1,7 @@
 extern crate rustc_serialize;
 extern crate docopt;
+extern crate regex;
+extern crate moka;
 
 use docopt::Docopt;
 
@@ -26,8 +28,10 @@ struct Args {
     flag_verbose: bool,
     flag_version: bool,
     flag_help: bool,
+
     cmd_use: bool,
     cmd_compile: bool,
+
     arg_module: Option<String>,
     arg_input: Option<String>,
     arg_output: Option<String>
