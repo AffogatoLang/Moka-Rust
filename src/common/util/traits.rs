@@ -1,5 +1,6 @@
+use std::result::Result;
 pub trait ProgramFragment {
-    fn run(&self) -> i32;
+    fn run(&self) -> Result<(), &'static str>;
 }
 
 pub trait Configurable {
