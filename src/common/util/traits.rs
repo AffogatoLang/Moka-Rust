@@ -3,7 +3,8 @@ pub trait ProgramFragment {
     fn run(&self) -> Result<(), &'static str>;
 }
 
-pub trait Configurable {
-    fn set_flag(&self) -> bool;
-    fn set_arg(&self, key:&str, value:&str) -> &str;
+pub trait Configurable<T> {
+    fn set_flag(&self, key:&str, value:bool) -> &Self;
+    fn set_arg(&self, key:&str, value:&str) -> &Self;
+    fn config(&self) -> T;
 }
