@@ -1,10 +1,10 @@
 use std::result::Result;
 pub trait ProgramFragment {
-    fn run(&self) -> Result<(), &'static str>;
+    fn run(&self) -> Result<(), String>;
 }
 
 pub trait ConfigurableProgram<T:ProgramFragment> {
-    fn set_flag(&self, key:&str, value:bool) -> &Self;
-    fn set_arg(&self, key:&str, value:&str) -> &Self;
+    fn set_flag(&mut self, key:String, value:bool) -> &mut Self;
+    fn set_arg(&mut self, key:String, value:String) -> &mut Self;
     fn config(&self) -> T;
 }

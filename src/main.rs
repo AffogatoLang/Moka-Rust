@@ -5,6 +5,11 @@ extern crate moka;
 
 use docopt::Docopt;
 
+use moka::compile::CompileBuilder;
+
+use moka::common::util::ConfigurableProgram;
+use moka::common::util::ProgramFragment;
+
 const MOKA_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 const USAGE : &'static str = "
 Compile or run a Moka module
@@ -32,9 +37,9 @@ struct Args {
     cmd_use: bool,
     cmd_compile: bool,
 
-    arg_module: Option<String>,
-    arg_input: Option<String>,
-    arg_output: Option<String>
+    arg_module: String,
+    arg_input: String,
+    arg_output: String
 }
 
 fn main() {
@@ -51,4 +56,29 @@ fn main() {
         println!("{}", USAGE);
         std::process::exit(0);
     }
+
+    let result = if args.cmd_use {
+        Result::Err("Use Command Not Currently Implemented".to_string())
+    } else if args.cmd_compile {
+        setup_and_use_compile(args)
+    } else {
+        Result::Err("No Such Command Currently Not Implemented".to_string())
+    };
+
+    match result {
+        Err(e) => println!("{}", e),
+        _ => ()
+    }
+}
+
+fn setup_and_use_compile(args: Args) -> Result<(), String> {
+    let compile_runner = CompileBuilder::new()
+        .set_flag("verbose".to_string(), args.flag_verbose)
+        .set_flag("archive".to_string(), args.flag_archive)
+         // Unwrap is fine as cannot possibly be none
+        .set_arg("module".to_string(), args.arg_module)
+        .set_arg("output".to_string(), args.arg_output)
+        .config();
+
+    compile_runner.run()
 }
