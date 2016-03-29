@@ -6,6 +6,7 @@ extern crate moka;
 use docopt::Docopt;
 
 use moka::compile::CompileBuilder;
+use moka::parse::ParseBuilder;
 
 use moka::common::util::ConfigurableProgram;
 use moka::common::util::ProgramFragment;
@@ -58,7 +59,7 @@ fn main() {
     }
 
     let result = if args.cmd_use {
-        Result::Err("Use Command Not Currently Implemented".to_string())
+        setup_and_use_parse(args)
     } else if args.cmd_compile {
         setup_and_use_compile(args)
     } else {
@@ -81,4 +82,17 @@ fn setup_and_use_compile(args: Args) -> Result<(), String> {
         .config();
 
     compile_runner.run()
+}
+
+fn setup_and_use_parse(args:Args) -> Result<(), String> {
+    let parse_runner = ParseBuilder::new()
+        .set_flag("verbose".to_string(), args.flag_verbose)
+        .set_flag("archive".to_string(), args.flag_archive)
+         // Unwrap is fine as cannot possibly be none
+        .set_arg("module".to_string(), args.arg_module)
+        .set_arg("input".to_string(), args.arg_input)
+        .set_arg("output".to_string(), args.arg_output)
+        .config();
+
+    parse_runner.run()
 }
