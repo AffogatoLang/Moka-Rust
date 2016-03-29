@@ -44,6 +44,8 @@ struct Args {
 }
 
 fn main() {
+
+    println!("{}", moka::common::python::init_file);
     let args: Args = Docopt::new(USAGE)
                             .and_then(|opts| opts.decode())
                             .unwrap_or_else(|e| e.exit());
