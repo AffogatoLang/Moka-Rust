@@ -1,3 +1,4 @@
+use std::io;
 pub trait Loader<T> {
-    fn load (&self, path:String) -> Result<T, String>;
+    fn load (&self) -> Result<T, io::Error>;
 }

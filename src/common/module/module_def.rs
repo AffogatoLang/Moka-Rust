@@ -1,5 +1,5 @@
+use std::io;
 use common::util::Loader;
-
 use common::module::LexFile;
 use common::module::LangFile;
 use common::module::InterpFile;
@@ -17,8 +17,8 @@ pub struct ModuleLoader {
     path: String
 }
 
-impl Loader<Module> for ModuleLoader {
-    fn load(&self, path:String) -> Result<Module, String> {
-        Err("Not Yet Implemented".to_string())
-    }
-}
+// impl Loader<Module> for ModuleLoader {
+//     fn load(&self) -> Result<Module, io::Error> {
+//
+//     }
+// }
