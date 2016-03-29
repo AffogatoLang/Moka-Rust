@@ -76,11 +76,11 @@ fn main() {
 
 fn setup_and_use_compile(args: Args) -> Result<(), String> {
     let compile_runner = CompileBuilder::new()
-        .set_flag("verbose".to_string(), args.flag_verbose)
-        .set_flag("archive".to_string(), args.flag_archive)
+        .set_flag("verbose", args.flag_verbose)
+        .set_flag("archive", args.flag_archive)
          // Unwrap is fine as cannot possibly be none
-        .set_arg("module".to_string(), args.arg_module)
-        .set_arg("output".to_string(), args.arg_output)
+        .set_arg("module", args.arg_module)
+        .set_arg("output", args.arg_output)
         .config();
 
     compile_runner.run()
@@ -88,12 +88,12 @@ fn setup_and_use_compile(args: Args) -> Result<(), String> {
 
 fn setup_and_use_parse(args:Args) -> Result<(), String> {
     let parse_runner = ParseBuilder::new()
-        .set_flag("verbose".to_string(), args.flag_verbose)
-        .set_flag("archive".to_string(), args.flag_archive)
+        .set_flag("verbose", args.flag_verbose)
+        .set_flag("archive", args.flag_archive)
          // Unwrap is fine as cannot possibly be none
-        .set_arg("module".to_string(), args.arg_module)
-        .set_arg("input".to_string(), args.arg_input)
-        .set_arg("output".to_string(), args.arg_output)
+        .set_arg("module", args.arg_module)
+        .set_arg("input", args.arg_input)
+        .set_arg("output", args.arg_output)
         .config();
 
     parse_runner.run()

@@ -24,18 +24,16 @@ impl ParseBuilder {
 }
 
 impl ConfigurableProgram<ParseRunner> for ParseBuilder {
-    fn set_flag(&mut self, name:String, value:bool) -> &mut Self {
-        let n:&str = &name;
-        match n {
+    fn set_flag(&mut self, name:&str, value:bool) -> &mut Self {
+        match name {
             "verbose" => self.is_verbose = value,
             "archive" => self.is_archive = value,
             _ => ()
         };
         self
     }
-    fn set_arg(&mut self, name:String, value:String) -> &mut Self {
-        let n:&str = &name;
-        match n {
+    fn set_arg(&mut self, name:&str, value:String) -> &mut Self {
+        match name {
             "module" => self.module_path = Option::Some(value),
             "input" => self.input_path = Option::Some(value),
             "output" => self.output_path = Option::Some(value),
