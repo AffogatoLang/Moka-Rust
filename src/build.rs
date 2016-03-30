@@ -27,7 +27,11 @@ fn main() {
             println!("Target output: {:?}", target_dir);
             fs::create_dir_all(&target_dir.parent().unwrap());
             let mut outfile = write_opts.open(&target_dir).unwrap_or_else(|e| panic!(e));
-            match outfile.write(cat(e.path()).unwrap().as_bytes()) {
+            let contents = match cat(e.path()) {
+                Ok(val) => val,
+                _ => continue
+            };
+            match outfile.write(contents.as_bytes()) {
                 Err(e) => println!("File Err {:?}", e),
                 _ => continue
             }
