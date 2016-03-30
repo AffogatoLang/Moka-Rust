@@ -2,11 +2,14 @@ extern crate rustc_serialize;
 extern crate docopt;
 extern crate regex;
 extern crate moka;
+extern crate toml;
 
 use docopt::Docopt;
 
 use moka::compile::CompileBuilder;
 use moka::parse::ParseBuilder;
+
+use moka::common::python;
 
 use moka::common::util::ConfigurableProgram;
 use moka::common::util::ProgramFragment;
@@ -44,6 +47,30 @@ struct Args {
 }
 
 fn main() {
+
+    let mut path_to_pyth = std::env::current_exe().unwrap().parent().unwrap().to_path_buf();
+    path_to_pyth.push("resources");
+    println!("{:?}", path_to_pyth);
+    let pyth = python::run_file("./resources/py_env/interp_runner.py", vec![path_to_pyth.to_str().unwrap(), "{\"this\": []}"])
+        .unwrap();
+    println!("Out {}", String::from_utf8(pyth.stdout).unwrap());
+    println!("Err {}", String::from_utf8(pyth.stderr).unwrap());
+
+    
+    let toml = r#"
+    [meta]
+    name= "Announcejs"
+    version= "0.1.0"
+    author= "Louis Capitanchik"
+    license= "BSD 3-Clause"
+    [options]
+    core= "Announcejs"
+    stripwhitespace= true
+    "#;
+
+    let value = toml::Parser::new(toml).parse().unwrap();
+    println!("{:?}", value);
+
     let args: Args = Docopt::new(USAGE)
                             .and_then(|opts| opts.decode())
                             .unwrap_or_else(|e| e.exit());
@@ -56,6 +83,11 @@ fn main() {
     if args.flag_help {
         println!("{}", USAGE);
         std::process::exit(0);
+    }
+
+    if args.flag_archive {
+        println!("Archive format is not currently implemented");
+        std::process::exit(1);
     }
 
     let result = if args.cmd_use {
