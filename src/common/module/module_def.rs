@@ -43,16 +43,16 @@ impl ModuleOpts {
 
 #[derive(Debug, RustcDecodable)]
 pub struct MetaOpts {
-    name: String,
-    version: String,
-    author: String,
-    license: String
+    pub name: String,
+    pub version: String,
+    pub author: String,
+    pub license: String
 }
 
 #[derive(Debug, RustcDecodable)]
 pub struct OptionsOpts {
-    strip_whitespace: Option<bool>,
-    core: Option<String>
+    pub strip_whitespace: Option<bool>,
+    pub core: Option<String>
 }
 
 pub struct Module<'a> {
