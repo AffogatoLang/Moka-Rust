@@ -1,7 +1,11 @@
 use common::util::ConfigurableProgram;
 use common::util::ProgramFragment;
 
+use common::module::Module;
+
 use std::option::Option;
+
+use std::path::PathBuf;
 
 pub struct ParseBuilder{
     is_verbose : bool,
@@ -76,7 +80,24 @@ pub struct ParseRunner {
 }
 
 impl ProgramFragment for ParseRunner {
-    fn run(&self) -> Result<(), String> {
+    fn run<'a>(&self) -> Result<(), &'static str> {
+        let mut module_conf_path = PathBuf::from(&self.module_path);
+        module_conf_path.push("module.toml");
+
+        if self.is_verbose {
+            println!("Loading the configuration file [{}]", module_conf_path.to_str().unwrap());
+        }
+
+        let mut module_conf = Module::new(module_conf_path.as_path());
+        let module_opts = module_conf.get_opts();
+
+        if self.is_verbose {
+            println!(r#"Found configuration for module named [{0}]"
+            :: Written by {1} and licensed under {2}
+            :: Module Version {3}"#, module_opts.meta.name,
+            module_opts.meta.author, module_opts.meta.license, module_opts.meta.version);
+        }
+
         Result::Ok(())
     }
 }

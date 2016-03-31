@@ -7,10 +7,8 @@ use docopt::Docopt;
 
 use std::path::Path;
 
-// use moka::compile::CompileBuilder;
 use moka::parse::ParseBuilder;
 
-// use moka::common::python;
 use moka::common::module;
 
 use moka::common::util::ConfigurableProgram;
@@ -49,18 +47,6 @@ struct Args {
 }
 
 fn main() {
-
-    // let mut path_to_pyth = moka::common::util::get_bin_dir();
-    // path_to_pyth.push("resources");
-    // println!("{:?}", path_to_pyth);
-    // let pyth = python::run_file("./resources/py_env/interp_runner.py", vec![path_to_pyth.to_str().unwrap(), "{\"this\": []}"])
-    //     .unwrap();
-    // println!("Out {}", String::from_utf8(pyth.stdout).unwrap());
-    // println!("Err {}", String::from_utf8(pyth.stderr).unwrap());
-
-    let mut md = module::Module::new(Path::new("./resources/jsn2tml/module.toml"));
-    println!("{:?}", md.get_opts());
-
     let args: Args = Docopt::new(USAGE)
                             .and_then(|opts| opts.decode())
                             .unwrap_or_else(|e| e.exit());
@@ -80,12 +66,24 @@ fn main() {
         std::process::exit(1);
     }
 
+    if args.flag_verbose {
+        println!("Running in verbose mode");
+
+        let type_msg = if args.flag_archive {"compressed module"} else {"expanded module"};
+        if args.cmd_use {
+            println!(r#"Parsing the specified language and interpreting input with it.
+            :: Language specified as {0} [{1}]
+            :: Input specified as location [{2}]
+            :: Output specified as location [{3}]"#, type_msg, args.arg_module, args.arg_input, args.arg_output);
+        }
+    }
+
     let result = if args.cmd_use {
         setup_and_use_parse(args)
     } else if args.cmd_compile {
         setup_and_use_compile(args)
     } else {
-        Result::Err("No Such Command Currently Not Implemented".to_string())
+        Result::Err("No Such Command Currently Not Implemented")
     };
 
     match result {
@@ -94,8 +92,8 @@ fn main() {
     }
 }
 
-fn setup_and_use_compile(args: Args) -> Result<(), String> {
-    return Err("Compiling language runners is not currently supported".to_string());
+fn setup_and_use_compile<'a>(args: Args) -> Result<(), &'a str> {
+    return Err("Compiling language runners is not currently supported");
 
     // let compile_runner = CompileBuilder::new()
     //     .set_flag("verbose", args.flag_verbose)
@@ -108,15 +106,14 @@ fn setup_and_use_compile(args: Args) -> Result<(), String> {
     // compile_runner.run()
 }
 
-fn setup_and_use_parse(args:Args) -> Result<(), String> {
-    let parse_runner = ParseBuilder::new()
+fn setup_and_use_parse<'a>(args:Args) -> Result<(), &'a str> {
+    ParseBuilder::new()
         .set_flag("verbose", args.flag_verbose)
         .set_flag("archive", args.flag_archive)
          // Unwrap is fine as cannot possibly be none
         .set_arg("module", args.arg_module)
         .set_arg("input", args.arg_input)
         .set_arg("output", args.arg_output)
-        .config();
-
-    parse_runner.run()
+        .config()
+        .run()
 }
