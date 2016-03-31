@@ -5,8 +5,8 @@ use toml;
 
 #[derive(Debug, RustcDecodable)]
 pub struct ModuleOpts {
-    meta: MetaOpts,
-    options: OptionsOpts
+    pub meta: MetaOpts,
+    pub options: OptionsOpts
 }
 
 impl ModuleOpts {
