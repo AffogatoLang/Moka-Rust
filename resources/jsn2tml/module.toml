@@ -1,0 +1,9 @@
+[meta]
+name = "jsn2tml"
+version = "0.1.0"
+author = "Louis Capitanchik"
+license = "BSD 3-Clause"
+
+[options]
+core = "jsn2tml"
+strip_whitsaespace = true

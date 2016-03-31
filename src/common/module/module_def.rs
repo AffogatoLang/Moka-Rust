@@ -1,48 +1,80 @@
-use std::io;
-use std::collections::HashMap;
-use common::util::Loader;
-use common::module::LexFile;
-use common::module::LangFile;
-use common::module::InterpFile;
+use std::io::prelude::*;
+use std::fs::File;
+use std::path::Path;
+use toml;
 
-struct ModuleOpts<'a> {
-    name: String,
-    version: String,
-    author: String,
-    license: String,
-    core: Option<String>,
-    options: HashMap<&'a str, &'a str>
+#[derive(Debug, RustcDecodable)]
+pub struct ModuleOpts {
+    meta: MetaOpts,
+    options: OptionsOpts
 }
 
-impl<'a> ModuleOpts<'a> {
-    fn optAsBool(&self, key: &'a str) -> Option<bool> {
-        let optionalopt = self.options.get(key);
-        let opt = match optionalopt {
-            Some(val) => val,
-            None => return None
+impl ModuleOpts {
+    pub fn load(path: String) -> Result<ModuleOpts, &'static str> {
+        let mut mod_string = String::new();
+        let mut file = match File::open(&path) {
+            Ok(file) => file,
+            Err(_) => {
+                return Err("Could not load config file")
+            }
         };
-        match *opt {
-            "true" => Some(true),
-            "false" => Some(false),
-            _ => None
+        file.read_to_string(&mut mod_string)
+        .unwrap_or_else(|e| panic!("Unrecoverable error while reading config: {}", e));
+
+        let mut t_parser = toml::Parser::new(&mod_string);
+        let tml = t_parser.parse();
+
+        if tml.is_none() {
+            for err in &t_parser.errors {
+                let (loline, locol) = t_parser.to_linecol(err.lo);
+                let (hiline, hicol) = t_parser.to_linecol(err.hi);
+                println!("{}:{}:{}-{}:{} error: {}",
+                         path, loline, locol, hiline, hicol, err.desc);
+            }
+            panic!("Unrecoverable error while parsing module config");
+
+
         }
+        let module_opts = toml::Value::Table(tml.unwrap());
+
+        Ok(toml::decode(module_opts).unwrap())
     }
 }
 
-struct Module<'b> {
-    path: String,
-    lex_files: Vec<LexFile>,
-    lang_files: Vec<LangFile>,
-    interp_files: Vec<InterpFile>,
-    options: ModuleOpts<'b>
+#[derive(Debug, RustcDecodable)]
+pub struct MetaOpts {
+    name: String,
+    version: String,
+    author: String,
+    license: String
 }
 
-pub struct ModuleLoader {
-    path: String
+#[derive(Debug, RustcDecodable)]
+pub struct OptionsOpts {
+    strip_whitespace: Option<bool>,
+    core: Option<String>
 }
 
-// impl Loader<Module> for ModuleLoader {
-//     fn load(&self) -> Result<Module, io::Error> {
-//
-//     }
-// }
+pub struct Module<'a> {
+    path: &'a Path, // Sub paths are determined relative to this one
+    options: Option<ModuleOpts>
+}
+
+impl<'b> Module<'b> {
+    pub fn new(path:&'b Path) -> Module {
+        Module {
+            path: path,
+            options: None
+        }
+    }
+
+    pub fn get_opts(&'b mut self) -> &'b ModuleOpts {
+        match self.options {
+            Some(ref opts) => opts,
+            None => {
+                self.options = Some(ModuleOpts::load(self.path.to_str().unwrap().to_string()).unwrap());
+                self.get_opts()
+            }
+        }
+    }
+}
