@@ -1,9 +1,18 @@
 language: rust
 rust:
-  - stable
-  - beta
-  - nightly
+- stable
+- beta
+- nightly
 matrix:
   allow_failures:
-    - rust: stable
-    - rust: beta
+  - rust: stable
+  - rust: beta
+deploy:
+  provider: releases
+  api_key:
+    secure: EDs8uEktG84eUM6afVqAHB7QVpx86rb2ZHM9kJEx1AjaBOs5ytJk5nnL7/dosBSEHG3FI0+oKt6n2dXeRCymPXMgU8GE9lgwRuzDsEA3H9yr3zmqbm4uplhwduVi5qK4oM5pWuOutofi4eEa8SiTIA5taMRujXwHFjDDswucJbePSxm6ioU/m7c3fh4eUMUrvHHpJqBJ9+kvZSP9e2KlU0f/WxQtAe/568tk/HLAdD3Eo9SLnVvL/etA8zyBBgUo2XV4R+J4sBho6SFQxhQBI3sHcTwq51iELNGnkQwgxtwSsm2CuhfrYEaO1R94cWtAt+2AH6RScP/scN8O772ab7FengvomDYvDYjO21mCK9GSMqRRLPtBoSa+KcYG+58EqCPoyaNOttYOMI3LJEQq6AyaEsYO1jt1SvqT114u8iN6lrVUrnRuJI1n9gdUOgl6z1rHJh8Rlo80oQWftWm9PXhnol7CQoHzB/V1IQDksM4eVksdZBo7tSdQjFChu21jaS4xWmssCs21kodT3htCfNV4lc1PQH4CuPHfTzES3pkssq8g8m6NOWjpShvhA/LCJVK7fuyi5gICCc3YY8slaIRXg0P8D0JykJH/aAkEKJpqeTnrKiW3t1L9ZIYzBijkyKJHxrvun3+ECkE5dHNoD4SlOiCxLjF3s3aYf1oX6aM=
+  file: moka
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: AffogatoLang/Moka-Rust
