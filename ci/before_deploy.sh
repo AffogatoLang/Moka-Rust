@@ -12,6 +12,8 @@ mk_tarball() {
   local temp_dir=$(mktempd)
   local out_dir=$(pwd)
 
+  echo $("ls target/$target/release")
+
   cp target/$TARGET/release/moka $temp_dir
 
   pushd $temp_dir
