@@ -12,11 +12,8 @@ mk_tarball() {
   local temp_dir=$(mktempd)
   local out_dir=$(pwd)
 
-  ls .
-  ls target
-  ls target/release
-
   cp target/release/moka $temp_dir
+  mkdir $temp_dir/resources
   cp -r target/release/resources/* $temp_dir/resources
 
   pushd $temp_dir
