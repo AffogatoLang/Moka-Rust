@@ -102,7 +102,7 @@ impl ProgramFragment for ParseRunner {
         if self.is_verbose {
             println!("Compiled list of {} lexical rules", rule_array.len());
             for rule in rule_array {
-                println!("    {:?}", rule);
+                println!("    :: {}", rule);
             }
         }
 

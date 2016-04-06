@@ -2,6 +2,7 @@ use std::cmp;
 use std::ops::Add;
 use std::option::Option;
 use pcre::{Match, Pcre};
+use std::fmt;
 
 #[derive(Debug)]
 pub struct LexRule {
@@ -9,6 +10,12 @@ pub struct LexRule {
     ident: String,
     pub src: String,
     expr: Pcre
+}
+
+impl fmt::Display for LexRule {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{0} : {1} : {2}", self.priority, self.ident, self.src)
+    }
 }
 
 impl LexRule {
