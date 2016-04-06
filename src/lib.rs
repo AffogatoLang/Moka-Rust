@@ -1,5 +1,5 @@
 extern crate rustc_serialize;
-extern crate regex;
+extern crate pcre;
 extern crate toml;
 
 pub mod common;

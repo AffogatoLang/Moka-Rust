@@ -1,18 +1,18 @@
 use std::cmp;
 use std::option::Option;
-use regex::Regex;
+use pcre::{CompileOption, Match, Pcre};
 
 pub struct LexRule {
     priority: i32,
     token: String,
-    expr: Regex
+    expr: Pcre
 }
 
 impl cmp::Eq for LexRule {}
 
 impl cmp::PartialEq for LexRule {
     fn eq (&self, other:&Self) -> bool{
-        (self.priority, &self.token, &self.expr) == (other.priority, &other.token, &other.expr)
+        (self.priority, &self.token) == (other.priority, &other.token)
     }
 }
 

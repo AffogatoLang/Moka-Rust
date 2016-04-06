@@ -13,7 +13,7 @@ name="moka"
 [dependencies]
 docopt = "0.6"
 rustc-serialize = "0.3"
-regex = "0.1"
+pcre = "0.2"
 toml = "0.1"
 lazy_static = "0.1"
 

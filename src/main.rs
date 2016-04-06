@@ -5,11 +5,7 @@ extern crate toml;
 
 use docopt::Docopt;
 
-use std::path::Path;
-
 use moka::parse::ParseBuilder;
-
-use moka::common::module;
 
 use moka::common::util::ConfigurableProgram;
 use moka::common::util::ProgramFragment;
