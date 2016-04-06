@@ -5,20 +5,21 @@ mktempd() {
 }
 
 mk_artifacts() {
-  cargo build --target $TARGET --release
+  cargo build --release
 }
 
 mk_tarball() {
   local temp_dir=$(mktempd)
   local out_dir=$(pwd)
 
-  echo $("ls target/$target/release")
+  echo $("ls target/release")
 
-  cp target/$TARGET/release/moka $temp_dir
+  cp target/release/moka $temp_dir
+  cp target/release/resources $temp_dir/resources
 
   pushd $temp_dir
 
-  tar czf $out_dir/${PROJECT_NAME}-${TRAVIS_TAG}-${TARGET}.tar.gz *
+  tar czf $out_dir/${PROJECT_NAME}-${TRAVIS_TAG}-x64-linux.tar.gz *
 
   popd $temp_dir
   rm -r $temp_dir
