@@ -68,9 +68,9 @@ fn main() {
         let type_msg = if args.flag_archive {"compressed module"} else {"expanded module"};
         if args.cmd_use {
             println!(r#"Parsing the specified language and interpreting input with it.
-            :: Language specified as {0} [{1}]
-            :: Input specified as location [{2}]
-            :: Output specified as location [{3}]"#, type_msg, args.arg_module, args.arg_input, args.arg_output);
+    :: Language specified as {0} [{1}]
+    :: Input specified as location [{2}]
+    :: Output specified as location [{3}]"#, type_msg, args.arg_module, args.arg_input, args.arg_output);
         }
     }
 
@@ -79,7 +79,7 @@ fn main() {
     } else if args.cmd_compile {
         setup_and_use_compile(args)
     } else {
-        Result::Err("No Such Command Currently Not Implemented")
+        Result::Err(String::from("No Such Command Currently Not Implemented"))
     };
 
     match result {
@@ -88,8 +88,9 @@ fn main() {
     }
 }
 
-fn setup_and_use_compile<'a>(args: Args) -> Result<(), &'a str> {
-    return Err("Compiling language runners is not currently supported");
+#[allow(unused_variables)]
+fn setup_and_use_compile(args: Args) -> Result<(), String> {
+    return Err(String::from("Compiling language runners is not currently supported"));
 
     // let compile_runner = CompileBuilder::new()
     //     .set_flag("verbose", args.flag_verbose)
@@ -102,7 +103,7 @@ fn setup_and_use_compile<'a>(args: Args) -> Result<(), &'a str> {
     // compile_runner.run()
 }
 
-fn setup_and_use_parse<'a>(args:Args) -> Result<(), &'a str> {
+fn setup_and_use_parse(args:Args) -> Result<(), String> {
     ParseBuilder::new()
         .set_flag("verbose", args.flag_verbose)
         .set_flag("archive", args.flag_archive)

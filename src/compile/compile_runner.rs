@@ -66,7 +66,7 @@ struct CompileRunner {
 }
 
 impl ProgramFragment for CompileRunner {
-    fn run(&self) -> Result<(), &'static str> {
+    fn run(&self) -> Result<(), String> {
         Result::Ok(())
     }
 }

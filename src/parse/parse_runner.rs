@@ -80,7 +80,7 @@ pub struct ParseRunner {
 }
 
 impl ProgramFragment for ParseRunner {
-    fn run<'a>(&self) -> Result<(), &'static str> {
+    fn run<'a>(&self) -> Result<(), String> {
         let mut module_conf_path = PathBuf::from(&self.module_path);
         module_conf_path.push("module.toml");
 
@@ -89,12 +89,15 @@ impl ProgramFragment for ParseRunner {
         }
 
         let mut module_conf = Module::new(module_conf_path.as_path());
-        let module_opts = module_conf.get_opts();
+        let module_opts = match module_conf.get_opts() {
+            Ok(opts) => opts,
+            Err(e) => return Err(e)
+        };
 
         if self.is_verbose {
-            println!(r#"Found configuration for module named [{0}]"
-            :: Written by {1} and licensed under {2}
-            :: Module Version {3}"#, module_opts.meta.name,
+            println!(r#"Found configuration for module named [{0}]
+    :: Written by {1} and licensed under {2}
+    :: Module Version {3}"#, module_opts.meta.name,
             module_opts.meta.author, module_opts.meta.license, module_opts.meta.version);
         }
 

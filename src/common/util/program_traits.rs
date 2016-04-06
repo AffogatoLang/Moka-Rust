@@ -1,6 +1,6 @@
 use std::result::Result;
 pub trait ProgramFragment {
-    fn run(&self) -> Result<(), &'static str>;
+    fn run(&self) -> Result<(), String>;
 }
 
 pub trait ConfigurableProgram<T:ProgramFragment> {
