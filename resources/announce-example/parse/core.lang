@@ -1,0 +1,6 @@
+#Core Entry Point
+S_LINE : S_READ_IN S_LINE?
+S_LINE : S_PRINT_OUT S_LINE?
+
+# Define the program
+CORE : S_LINE
