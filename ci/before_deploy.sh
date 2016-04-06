@@ -12,10 +12,12 @@ mk_tarball() {
   local temp_dir=$(mktempd)
   local out_dir=$(pwd)
 
-  echo $("ls target/release")
+  ls .
+  ls target
+  ls target/release
 
   cp target/release/moka $temp_dir
-  cp target/release/resources $temp_dir/resources
+  cp -r target/release/resources/* $temp_dir/resources
 
   pushd $temp_dir
 
