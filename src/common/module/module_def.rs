@@ -70,12 +70,19 @@ pub struct Module<'a> {
     options: Option<ModuleOpts>
 }
 
+fn sub_dir_of<'c>(path: &'c Path, name: &'c str) -> String {
+        let mut path_buf : PathBuf = path.to_path_buf();
+        path_buf.push(name);
+        path_buf.into_os_string().into_string().unwrap()
+}
+
 impl<'b> Module<'b> {
-    pub fn new(path:&'b Path) -> Module {
-        Module {
-            path: path,
-            options: None
-        }
+    pub fn new(path:&'b Path) -> Result<Module, String> {
+        let opts = try!(ModuleOpts::load(sub_dir_of(path, "module.toml")));
+        Ok(Module {
+                path: path,
+                options: Some(opts)
+        })
     }
 
     pub fn sub_dir(&self, name: &'b str) -> String {
@@ -84,16 +91,10 @@ impl<'b> Module<'b> {
         path_buf.into_os_string().into_string().unwrap()
     }
 
-    pub fn get_opts(&'b mut self) -> Result<&'b ModuleOpts, String> {
+    pub fn get_opts(&self) -> Result<&ModuleOpts, String> {
         match self.options {
             Some(ref opts) => Ok(opts),
-            None => {
-                self.options = match ModuleOpts::load(self.sub_dir("module.toml")) {
-                    Ok(opts) => Some(opts),
-                    Err(e) => return Err(e)
-                };
-                self.get_opts()
-            }
+            None => Err(String::from("Options has not been initialised yet"))
         }
     }
 }

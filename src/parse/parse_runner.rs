@@ -3,6 +3,8 @@ use common::util::ProgramFragment;
 
 use common::module::Module;
 
+use common::lexer;
+
 use std::option::Option;
 
 use std::path::Path;
@@ -81,7 +83,7 @@ pub struct ParseRunner {
 
 impl ProgramFragment for ParseRunner {
     fn run<'a>(&self) -> Result<(), String> {
-        let mut module_conf = Module::new(Path::new(&self.module_path));
+        let module_conf = try!(Module::new(Path::new(&self.module_path)));
         let module_opts = match module_conf.get_opts() {
             Ok(opts) => opts,
             Err(e) => return Err(e)
