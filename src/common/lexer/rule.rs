@@ -1,8 +1,6 @@
-extern crate regex;
-
 use std::cmp;
 use std::option::Option;
-use self::regex::Regex;
+use regex::Regex;
 
 pub struct LexRule {
     priority: i32,
