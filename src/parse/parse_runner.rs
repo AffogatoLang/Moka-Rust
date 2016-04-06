@@ -5,7 +5,7 @@ use common::module::Module;
 
 use std::option::Option;
 
-use std::path::PathBuf;
+use std::path::Path;
 
 pub struct ParseBuilder{
     is_verbose : bool,
@@ -81,13 +81,7 @@ pub struct ParseRunner {
 
 impl ProgramFragment for ParseRunner {
     fn run<'a>(&self) -> Result<(), String> {
-        let mut module_conf_path = PathBuf::from(&self.module_path);
-
-        // if self.is_verbose {
-        //     println!("Loading the module file [{}]", module_conf_path.to_str().unwrap());
-        // }
-
-        let mut module_conf = Module::new(module_conf_path.as_path());
+        let mut module_conf = Module::new(Path::new(&self.module_path));
         let module_opts = match module_conf.get_opts() {
             Ok(opts) => opts,
             Err(e) => return Err(e)
