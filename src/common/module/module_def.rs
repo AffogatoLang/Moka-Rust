@@ -1,6 +1,7 @@
 use std::io::prelude::*;
 use std::fs::File;
 use std::path::Path;
+use std::path::PathBuf;
 use std::ops::Add;
 use std::collections::HashMap;
 use toml;
@@ -77,11 +78,17 @@ impl<'b> Module<'b> {
         }
     }
 
+    pub fn sub_dir(&self, name: &'b str) -> String {
+        let mut path_buf : PathBuf = self.path.to_path_buf();
+        path_buf.push(name);
+        path_buf.into_os_string().into_string().unwrap()
+    }
+
     pub fn get_opts(&'b mut self) -> Result<&'b ModuleOpts, String> {
         match self.options {
             Some(ref opts) => Ok(opts),
             None => {
-                self.options = match ModuleOpts::load(self.path.to_str().unwrap().to_string()) {
+                self.options = match ModuleOpts::load(self.sub_dir("module.toml")) {
                     Ok(opts) => Some(opts),
                     Err(e) => return Err(e)
                 };

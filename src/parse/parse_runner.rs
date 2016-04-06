@@ -82,11 +82,10 @@ pub struct ParseRunner {
 impl ProgramFragment for ParseRunner {
     fn run<'a>(&self) -> Result<(), String> {
         let mut module_conf_path = PathBuf::from(&self.module_path);
-        module_conf_path.push("module.toml");
 
-        if self.is_verbose {
-            println!("Loading the configuration file [{}]", module_conf_path.to_str().unwrap());
-        }
+        // if self.is_verbose {
+        //     println!("Loading the module file [{}]", module_conf_path.to_str().unwrap());
+        // }
 
         let mut module_conf = Module::new(module_conf_path.as_path());
         let module_opts = match module_conf.get_opts() {
