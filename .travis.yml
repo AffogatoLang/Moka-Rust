@@ -6,10 +6,6 @@ env:
   global:
     - PROJECT_NAME=moka
 
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y autotools-dev autoconf
-
 before_deploy:
   - bash ci/before_deploy.sh
 
