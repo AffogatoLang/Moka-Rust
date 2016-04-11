@@ -6,4 +6,4 @@ license = "BSD 3-Clause"
 
 [options]
 core = "announce"
-strip_whitsaespace = true
+strip_whitespace = true
