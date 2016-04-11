@@ -2,8 +2,7 @@ use common::util::{ConfigurableProgram, ProgramFragment};
 
 use common::module::Module;
 
-use common::lexer;
-use common::lexer::{LexRule, Lexer};
+use common::lexer::Lexer;
 
 use std::option::Option;
 
@@ -73,6 +72,7 @@ impl ConfigurableProgram<ParseRunner> for ParseBuilder {
     }
 }
 
+#[allow(dead_code)]
 pub struct ParseRunner {
     is_verbose : bool,
     is_archive : bool,
@@ -97,6 +97,10 @@ impl ProgramFragment for ParseRunner {
         }
 
         let mut lex = Lexer::from_dir(module_conf.sub_dir("lex"), self.is_verbose);
+        lex.set_ignore_whitespace(module_opts.options.strip_whitespace.unwrap_or(false));
+        let s : String = "RIGHTLY data #\nVERILY \"hello\" + data #".into();
+
+        let tokens = try!(lex.tokenise(&s));
 
         Result::Ok(())
     }

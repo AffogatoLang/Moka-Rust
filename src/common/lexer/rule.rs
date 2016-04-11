@@ -13,34 +13,11 @@ pub struct LexRule {
     expr: Pcre
 }
 
-impl fmt::Display for LexRule {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{0} : {1} : {2}", self.priority, self.ident, self.src)
-    }
-}
-
-impl Clone for LexRule {
-    fn clone(&self) -> Self {
-        LexRule {
-            priority: self.priority,
-            ident: self.ident.clone(),
-            src: self.src.clone(),
-            expr: Pcre::compile(&self.src).unwrap()
-        }
-    }
-    fn clone_from(&mut self, source: &Self) {
-        self.priority = source.priority;
-        self.ident = source.ident.clone();
-        self.src = source.src.clone();
-        self.expr = Pcre::compile(&source.src).unwrap()
-    }
-}
-
 impl LexRule {
     pub fn new(priority: u32, ident: String, expr: String) -> Result<LexRule, String> {
-        let re = match Pcre::compile(&expr) {
+        let re = match Pcre::compile(&anchor_string(&expr)) {
             Ok(regex) => regex,
-            Err(_) => return Err(String::from("Unable to compile regex ").add(&expr))
+            Err(_) => return Err(String::from("Unable to compile regex ").add(&anchor_string(&expr)))
         };
 
         Ok(LexRule {
@@ -78,8 +55,43 @@ impl LexRule {
         LexRule::new(priority, buf_ident.clone(), buf_regex.clone())
     }
 
+    pub fn clone_ident(&self) -> String {
+        self.ident.clone()
+    }
+
     pub fn match_at<'a>(&'a mut self, src:&'a String, pos:usize) -> Option<Match> {
         self.expr.exec_from(&(**src), pos)
+    }
+}
+
+fn anchor_string(src: &String) -> String {
+    match src.chars().next() {
+        Some('^') => src.clone(),
+        Some(_) => format!("{}{}", "^", src),
+        None => src.clone()
+    }
+}
+
+impl fmt::Display for LexRule {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{0} : {1} : /{2}/", self.priority, self.ident, self.src)
+    }
+}
+
+impl Clone for LexRule {
+    fn clone(&self) -> Self {
+        LexRule {
+            priority: self.priority,
+            ident: self.ident.clone(),
+            src: self.src.clone(),
+            expr: Pcre::compile(&anchor_string(&self.src)).unwrap()
+        }
+    }
+    fn clone_from(&mut self, source: &Self) {
+        self.priority = source.priority;
+        self.ident = source.ident.clone();
+        self.src = source.src.clone();
+        self.expr = Pcre::compile(&anchor_string(&source.src)).unwrap()
     }
 }
 

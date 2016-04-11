@@ -28,6 +28,9 @@ pub fn ruleset_from_dir_v (dir_path: String, verbose: bool) -> io::Result<Rulese
     let mut rules = Ruleset::new();
 
     for entry in lex_list {
+        if verbose {
+            println!("Loading rules from file [{}]", &entry.path().display());
+        }
         let mut file = try!(fs::File::open(entry.path()));
         let mut contents = String::new();
         try!(file.read_to_string(&mut contents));
