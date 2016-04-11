@@ -1,9 +1,8 @@
-use std::cmp;
+use std::{cmp, fmt};
 use std::ops::Add;
 use std::option::Option;
 use pcre::{Match, Pcre};
 use std::clone::Clone;
-use std::fmt;
 
 #[derive(Debug)]
 pub struct LexRule {

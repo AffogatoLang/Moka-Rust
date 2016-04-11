@@ -1,7 +1,5 @@
-use common::lexer::Ruleset;
-use common::lexer::LexRule;
-use walkdir::WalkDir;
-use walkdir::DirEntry;
+use common::lexer::{Ruleset, LexRule};
+use walkdir::{WalkDir, DirEntry};
 use std::io::prelude::*;
 use std::io;
 use std::fs;
