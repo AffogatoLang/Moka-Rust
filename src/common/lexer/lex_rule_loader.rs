@@ -6,11 +6,11 @@ use std::io::prelude::*;
 use std::io;
 use std::fs;
 
-pub fn ruleset_from_dir(dir_path: String) -> io::Result<Ruleset> {
+pub fn ruleset_from_dir (dir_path: String) -> io::Result<Ruleset> {
     ruleset_from_dir_v(dir_path, false)
 }
 
-pub fn ruleset_from_dir_v(dir_path: String, verbose: bool) -> io::Result<Ruleset> {
+pub fn ruleset_from_dir_v (dir_path: String, verbose: bool) -> io::Result<Ruleset> {
     let mut lex_list:Vec<DirEntry> = Vec::new();
     for entry in WalkDir::new(dir_path) {
         let entry = entry.unwrap();
@@ -37,6 +37,5 @@ pub fn ruleset_from_dir_v(dir_path: String, verbose: bool) -> io::Result<Ruleset
             }
         }
     }
-
-    Ok(rules)
+    Ok(rules.clone())
 }

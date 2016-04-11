@@ -96,19 +96,7 @@ impl ProgramFragment for ParseRunner {
             module_opts.meta.author, module_opts.meta.license, module_opts.meta.version);
         }
 
-        let mut rules = lexer::ruleset_from_dir(module_conf.sub_dir("lex")).unwrap();
-        let rule_array = rules.complete();
-
-        if self.is_verbose {
-            println!("Compiled list of {} lexical rules", rule_array.len());
-            for rule in rule_array {
-                println!("    :: {}", rule);
-            }
-        }
-
-        let mut lex = Lexer::new(rule_array);
-
-        lex.set_verbose(self.is_verbose);
+        let mut lex = Lexer::from_dir(module_conf.sub_dir("lex"), self.is_verbose);
 
         Result::Ok(())
     }
