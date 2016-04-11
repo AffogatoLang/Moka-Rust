@@ -22,6 +22,8 @@ else:
 tokens = {};
 patterns = {};
 context_dict = {};
+onsetup = [];
+onteardown = [];
 
 # Tokens are defined as single strings
 def Token(tok):
@@ -36,11 +38,17 @@ def Pattern(pat):
         patterns[flat_pat] = f;
     return pattern_impl;
 
-# Directory containing mokapy has been appended to path
-from mokapy.glob import mokadef;
+def Setup(f):
+    onsetup.push(f);
+
+# Directory containing content has been appended to path
+from content.glob import mokadef;
 mokadef(Token, Pattern); # Load all defs into dictionaries
+
+print tokens;
+print patterns;
 
 leaves = [];
 tree_data = json.loads(argv[2]);
 
-#
+# TREE PARSE HERE

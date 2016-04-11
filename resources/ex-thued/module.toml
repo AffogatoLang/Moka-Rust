@@ -1,0 +1,9 @@
+[meta]
+name = "Thued"
+version = "0.0.1"
+author = "Louis Capitanchik"
+license = "MIT"
+
+[options]
+strip_whitespace = true
+core = "Thued"
