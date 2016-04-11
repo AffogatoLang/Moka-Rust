@@ -2,6 +2,7 @@ use std::cmp;
 use std::ops::Add;
 use std::option::Option;
 use pcre::{Match, Pcre};
+use std::clone::Clone;
 use std::fmt;
 
 #[derive(Debug)]
@@ -15,6 +16,23 @@ pub struct LexRule {
 impl fmt::Display for LexRule {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{0} : {1} : {2}", self.priority, self.ident, self.src)
+    }
+}
+
+impl Clone for LexRule {
+    fn clone(&self) -> Self {
+        LexRule {
+            priority: self.priority,
+            ident: self.ident.clone(),
+            src: self.src.clone(),
+            expr: Pcre::compile(&self.src).unwrap()
+        }
+    }
+    fn clone_from(&mut self, source: &Self) {
+        self.priority = source.priority;
+        self.ident = source.ident.clone();
+        self.src = source.src.clone();
+        self.expr = Pcre::compile(&source.src).unwrap()
     }
 }
 
