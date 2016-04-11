@@ -58,6 +58,7 @@ impl ConfigurableProgram<CompileRunner> for CompileBuilder {
     }
 }
 
+#[allow(dead_code)]
 struct CompileRunner {
     is_verbose : bool,
     is_archive : bool,
