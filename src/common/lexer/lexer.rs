@@ -59,11 +59,13 @@ impl Lexer {
         self.ignore_whitespace = ignore_whitespace;
     }
 
-    pub fn tokenise(&mut self, src: &String) -> Result<Vec<Token>, String> {
+    pub fn tokenise(&mut self, file: (&String, &String)) -> Result<Vec<Token>, String> {
         if self.is_verbose {
             println!("Tokenising Input");
             println!("    :: Ignore Whitespace [{:?}]", self.ignore_whitespace);
         }
+        let filename = file.0;
+        let src = file.1;
 
         let mut tokens : Vec<Token> = Vec::new();
 
@@ -112,7 +114,7 @@ impl Lexer {
                         let token = Token::new(
                             rule.clone_ident(),
                             t_content.into(),
-                            "null".into(),
+                            filename.clone(),
                             util::get_line_col(&src, index)
                         );
 

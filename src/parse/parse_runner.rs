@@ -1,11 +1,9 @@
-use common::util::{ConfigurableProgram, ProgramFragment};
-
+use common::util::{ConfigurableProgram, ProgramFragment, load_as_dir_or_file};
 use common::module::Module;
 
-use common::lexer::Lexer;
+use common::lexer::{Lexer, Token};
 
 use std::option::Option;
-
 use std::path::Path;
 
 pub struct ParseBuilder{
@@ -96,11 +94,26 @@ impl ProgramFragment for ParseRunner {
             module_opts.meta.author, module_opts.meta.license, module_opts.meta.version);
         }
 
+        let input_files_res = load_as_dir_or_file(Path::new(&self.input_path));
+        let input_files_vec : Vec<(String, String)> = match input_files_res {
+            Err(e) => return Err(format!("{}", e)),
+            Ok(val) => val
+        };
+
+        let input_files : Vec<(&String, &String)> = input_files_vec
+                                                    .iter()
+                                                    .map(|file| (&file.0, &file.1))
+                                                    .collect();
+
         let mut lex = Lexer::from_dir(module_conf.sub_dir("lex"), self.is_verbose);
         lex.set_ignore_whitespace(module_opts.options.strip_whitespace.unwrap_or(false));
-        let s : String = "RIGHTLY data #\nVERILY \"hello\" + data #".into();
+        // let s : String = "RIGHTLY data #\nVERILY \"hello\" + data #".into();
 
-        let tokens = try!(lex.tokenise(&s));
+        let mut tokens : Vec<(&String, Vec<Token>)> = Vec::new();
+
+        for file in input_files {
+            tokens.push((file.0, try!(lex.tokenise(file))));
+        }
 
         Result::Ok(())
     }
