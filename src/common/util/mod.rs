@@ -5,9 +5,14 @@ mod string_util;
 
 pub use self::program_traits::ProgramFragment;
 pub use self::program_traits::ConfigurableProgram;
+
 pub use self::file_traits::Loader;
 pub use self::file_util::get_bin_dir;
+pub use self::file_util::load_as_dir_or_file;
+
 pub use self::string_util::get_line_col;
+pub use self::string_util::osstr_to_string;
+
 pub use self::string_util::generate_syntax_error;
 pub use self::string_util::generate_syntax_error_with_slug;
 pub use self::string_util::generate_syntax_error_from_index;

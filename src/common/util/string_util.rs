@@ -1,3 +1,5 @@
+use std::ffi::OsStr;
+
 pub fn get_line_col(src: &String, index: usize) -> (usize, usize) {
     let slices = src.split_at(index);
     let prev:&str = slices.0;
@@ -49,4 +51,11 @@ pub fn generate_syntax_error_with_slug_from_index<'a>(src: &String, index: usize
 
 pub fn generate_syntax_error_from_index(src: &String, index: usize) -> String {
     generate_syntax_error(src, get_line_col(src, index))
+}
+
+pub fn osstr_to_string (input: &OsStr) -> Option<String> {
+    match input.to_str() {
+        None => None,
+        Some(val) => Some(val.into())
+    }
 }
