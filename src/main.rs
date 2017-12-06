@@ -1,4 +1,7 @@
-extern crate rustc_serialize;
+#[macro_use] extern crate serde_derive;
+
+extern crate serde;
+extern crate serde_json;
 extern crate docopt;
 extern crate moka;
 extern crate toml;
@@ -27,7 +30,7 @@ Options:
     --version       Show the installed Moka version
 ";
 
-#[derive(Debug, RustcDecodable)]
+#[derive(Debug, Deserialize)]
 struct Args {
     flag_archive: bool,
     flag_verbose: bool,
@@ -44,7 +47,7 @@ struct Args {
 
 fn main() {
     let args: Args = Docopt::new(USAGE)
-                            .and_then(|opts| opts.decode())
+                            .and_then(|opts| opts.deserialize())
                             .unwrap_or_else(|e| e.exit());
 
     if args.flag_version {
@@ -107,7 +110,6 @@ fn setup_and_use_parse(args:Args) -> Result<(), String> {
     ParseBuilder::new()
         .set_flag("verbose", args.flag_verbose)
         .set_flag("archive", args.flag_archive)
-         // Unwrap is fine as cannot possibly be none
         .set_arg("module", args.arg_module)
         .set_arg("input", args.arg_input)
         .set_arg("output", args.arg_output)

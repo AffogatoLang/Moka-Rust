@@ -1,6 +1,7 @@
 use common::lexer::{LexRule, ruleset_from_dir_v, Token};
 use std::vec::Vec;
 use common::util;
+
 pub struct Lexer {
     rules: Vec<LexRule>,
     is_verbose: bool,

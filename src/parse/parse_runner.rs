@@ -81,7 +81,7 @@ pub struct ParseRunner {
 
 impl ProgramFragment for ParseRunner {
     fn run<'a>(&self) -> Result<(), String> {
-        let module_conf = try!(Module::new(Path::new(&self.module_path)));
+        let module_conf = Module::new(Path::new(&self.module_path))?;
         let module_opts = match module_conf.get_opts() {
             Ok(opts) => opts,
             Err(e) => return Err(e)
@@ -112,7 +112,7 @@ impl ProgramFragment for ParseRunner {
         let mut tokens : Vec<(&String, Vec<Token>)> = Vec::new();
 
         for file in input_files {
-            tokens.push((file.0, try!(lex.tokenise(file))));
+            tokens.push((file.0, lex.tokenise(file)?));
         }
 
         Result::Ok(())
