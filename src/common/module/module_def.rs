@@ -6,7 +6,7 @@ use std::ops::Add;
 use std::collections::HashMap;
 use toml;
 
-#[derive(Debug, RustcDecodable)]
+#[derive(Debug, Deserialize)]
 pub struct ModuleOpts {
     pub meta: MetaOpts,
     pub options: OptionsOpts,
@@ -51,7 +51,7 @@ impl ModuleOpts {
     }
 }
 
-#[derive(Debug, RustcDecodable)]
+#[derive(Debug, Deserialize)]
 pub struct MetaOpts {
     pub name: String,
     pub version: String,
@@ -59,7 +59,7 @@ pub struct MetaOpts {
     pub license: String
 }
 
-#[derive(Debug, RustcDecodable)]
+#[derive(Debug, Deserialize)]
 pub struct OptionsOpts {
     pub strip_whitespace: Option<bool>,
     pub core: Option<String>
@@ -78,9 +78,9 @@ fn sub_dir_of<'c>(path: &'c Path, name: &'c str) -> String {
 
 impl<'b> Module<'b> {
     pub fn new(path:&'b Path) -> Result<Module, String> {
-        let opts = try!(ModuleOpts::load(sub_dir_of(path, "module.toml")));
+        let opts = ModuleOpts::load(sub_dir_of(path, "module.toml"))?;
         Ok(Module {
-                path: path,
+                path,
                 options: Some(opts)
         })
     }

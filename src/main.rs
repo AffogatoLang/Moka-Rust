@@ -1,4 +1,7 @@
-extern crate rustc_serialize;
+#[macro_use] extern crate serde_derive;
+
+extern crate serde;
+extern crate serde_json;
 extern crate docopt;
 extern crate moka;
 extern crate toml;
@@ -27,7 +30,7 @@ Options:
     --version       Show the installed Moka version
 ";
 
-#[derive(Debug, RustcDecodable)]
+#[derive(Debug, Deserialize)]
 struct Args {
     flag_archive: bool,
     flag_verbose: bool,

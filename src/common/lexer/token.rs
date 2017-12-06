@@ -1,5 +1,6 @@
 use std::fmt;
-#[derive(RustcDecodable, RustcEncodable, Debug, Clone)]
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Token {
     ident: String,
     content: String,
@@ -9,8 +10,8 @@ pub struct Token {
 impl Token {
     pub fn new(ident: String, content: String, file: String, location: (usize, usize)) -> Token {
         Token {
-            ident: ident,
-            content: content,
+            ident,
+            content,
             fileloc: (
                 file,
                 location.0,

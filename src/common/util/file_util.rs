@@ -15,7 +15,7 @@ pub fn get_bin_dir () -> PathBuf {
 }
 
 pub fn load_as_dir_or_file(path: &Path) -> io::Result<Vec<(String, String)>> {
-    let meta : fs::Metadata = try!(fs::metadata(path));
+    let meta : fs::Metadata = fs::metadata(path)?;
     if meta.is_dir() {
         read_as_dir(path)
     } else {
@@ -28,13 +28,13 @@ fn read_as_dir(path: &Path) -> io::Result<Vec<(String, String)>> {
     for entry in WalkDir::new(path) {
         let entry : DirEntry = entry.unwrap();
         let ent_path : &Path = entry.path();
-        let ent_meta = try!(entry.metadata());
+        let ent_meta = entry.metadata()?;
         println!("{}", ent_path.display());
         if ent_meta.is_file() {
-            let mut ent_file : fs::File = try!(fs::File::open(ent_path));
+            let mut ent_file : fs::File = fs::File::open(ent_path)?;
 
             let mut buffer = &mut String::new();
-            try!(ent_file.read_to_string(buffer));
+            ent_file.read_to_string(buffer)?;
 
             file_contents.push((util::osstr_to_string(ent_path.file_stem().unwrap()).unwrap(), buffer.clone()));
         }
@@ -44,8 +44,8 @@ fn read_as_dir(path: &Path) -> io::Result<Vec<(String, String)>> {
 }
 
 fn read_as_file(path: &Path) -> io::Result<Vec<(String, String)>> {
-    let mut file : fs::File = try!(fs::File::open(path));
+    let mut file : fs::File = fs::File::open(path)?;
     let mut buffer = &mut String::new();
-    try!(file.read_to_string(buffer));
+    file.read_to_string(buffer)?;
     Ok(vec![(util::osstr_to_string(path.file_stem().unwrap()).unwrap(), buffer.clone())])
 }
