@@ -46,7 +46,7 @@ fn main() {
 }
 
 fn cat(path: &Path) -> io::Result<String> {
-    let mut f = try!(File::open(path));
+    let mut f = File::open(path)?;
     let mut s = String::new();
     match f.read_to_string(&mut s) {
         Ok(_) => Ok(s),
