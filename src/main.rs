@@ -47,7 +47,7 @@ struct Args {
 
 fn main() {
     let args: Args = Docopt::new(USAGE)
-                            .and_then(|opts| opts.decode())
+                            .and_then(|opts| opts.deserialize())
                             .unwrap_or_else(|e| e.exit());
 
     if args.flag_version {
@@ -110,7 +110,6 @@ fn setup_and_use_parse(args:Args) -> Result<(), String> {
     ParseBuilder::new()
         .set_flag("verbose", args.flag_verbose)
         .set_flag("archive", args.flag_archive)
-         // Unwrap is fine as cannot possibly be none
         .set_arg("module", args.arg_module)
         .set_arg("input", args.arg_input)
         .set_arg("output", args.arg_output)

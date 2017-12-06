@@ -4,6 +4,7 @@ use std::path::Path;
 use std::path::PathBuf;
 use std::ops::Add;
 use std::collections::HashMap;
+use std::error::Error;
 use toml;
 
 #[derive(Debug, Deserialize)]
@@ -28,26 +29,29 @@ impl ModuleOpts {
             Ok(_) => ()
         }
 
-        let mut t_parser = toml::Parser::new(&mod_string);
-        let tml = t_parser.parse();
+        let tml = toml::from_str(&mod_string);
 
-        if tml.is_none() {
+        if let Err(error) = tml {
             let mut err_msg = String::new();
-            for err in &t_parser.errors {
-                let (loline, locol) = t_parser.to_linecol(err.lo);
-                let (hiline, hicol) = t_parser.to_linecol(err.hi);
-                let e_msg = format!("{}:{}:{}-{}:{} error: {}",
-                         path, loline, locol, hiline, hicol, err.desc);
-                err_msg = err_msg.add(&e_msg);
-                err_msg = err_msg.add("\n");
-            }
+
+            let (line, col) = match error.line_col() {
+                Some(linecol) => linecol,
+                None => (0, 0),
+            };
+
+            let e_msg = format!("Parse Error @ {} {}:{}\nerror: {}",
+                     path, line, col, error.description());
+
+            err_msg = err_msg.add(&e_msg);
+            err_msg = err_msg.add("\n");
+
             return Err(err_msg)
         }
-        let module_opts = toml::Value::Table(tml.unwrap());
+        let module_opts: ModuleOpts = tml.unwrap();
 
         // TODO : check dependencies exist, complain if not
 
-        Ok(toml::decode(module_opts).unwrap())
+        Ok(module_opts)
     }
 }
 

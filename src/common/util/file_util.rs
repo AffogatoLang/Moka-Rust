@@ -33,7 +33,7 @@ fn read_as_dir(path: &Path) -> io::Result<Vec<(String, String)>> {
         if ent_meta.is_file() {
             let mut ent_file : fs::File = fs::File::open(ent_path)?;
 
-            let mut buffer = &mut String::new();
+            let buffer = &mut String::new();
             ent_file.read_to_string(buffer)?;
 
             file_contents.push((util::osstr_to_string(ent_path.file_stem().unwrap()).unwrap(), buffer.clone()));
@@ -45,7 +45,7 @@ fn read_as_dir(path: &Path) -> io::Result<Vec<(String, String)>> {
 
 fn read_as_file(path: &Path) -> io::Result<Vec<(String, String)>> {
     let mut file : fs::File = fs::File::open(path)?;
-    let mut buffer = &mut String::new();
+    let buffer = &mut String::new();
     file.read_to_string(buffer)?;
     Ok(vec![(util::osstr_to_string(path.file_stem().unwrap()).unwrap(), buffer.clone())])
 }
