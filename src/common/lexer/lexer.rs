@@ -61,18 +61,19 @@ impl Lexer {
     }
 
     pub fn tokenise(&mut self, file: (&String, &String)) -> Result<Vec<Token>, String> {
-        if self.is_verbose {
-            println!("Tokenising Input");
-            println!("    :: Ignore Whitespace [{:?}]", self.ignore_whitespace);
-        }
         let filename = file.0;
         let src = file.1;
 
-        let mut tokens : Vec<Token> = Vec::new();
+        if self.is_verbose {
+            println!("Tokenising Input [{}]", filename);
+            println!("    :: Ignore Whitespace [{:?}]", self.ignore_whitespace);
+        }
 
-        let mut stub : &str;
+        let mut tokens: Vec<Token> = Vec::new();
 
-        let mut index : usize = 0;
+        let mut stub: &str;
+
+        let mut index: usize = 0;
         let mut prev_index = index;
         let src_len = src.len();
 
@@ -101,20 +102,18 @@ impl Lexer {
                 found_token = false;
                 let stub_string = &stub.to_string();
                 for rule in &self.rules {
-                    let mut l_rule = rule.clone();
-                    let m = l_rule.match_at(&stub_string, 0);
-                    if m.is_some() {
-                        let m_val = m.unwrap();
-
-                        let t_content = if m_val.string_count() > 1 {
-                            m_val.group(1)
+                    let mut lex_rule = rule.clone();
+                    let rule_match = lex_rule.match_at(&stub_string, 0);
+                    if let Some(match_value) = rule_match {
+                        let content = if match_value.string_count() > 1 {
+                            match_value.group(1)
                         } else {
-                            m_val.group(0)
+                            match_value.group(0)
                         };
 
                         let token = Token::new(
                             rule.clone_ident(),
-                            t_content.into(),
+                            content.into(),
                             filename.clone(),
                             util::get_line_col(&src, index)
                         );
@@ -126,7 +125,7 @@ impl Lexer {
                         tokens.push(token);
 
                         found_token = true;
-                        index = index + m_val.group_end(0);
+                        index = index + match_value.group_end(0);
                         break;
                     }
                 }

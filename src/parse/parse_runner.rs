@@ -95,18 +95,17 @@ impl ProgramFragment for ParseRunner {
         }
 
         let input_files_res = load_as_dir_or_file(Path::new(&self.input_path));
-        let input_files_vec : Vec<(String, String)> = match input_files_res {
+        let input_files_vec: Vec<(String, String)> = match input_files_res {
             Err(e) => return Err(format!("{}", e)),
             Ok(val) => val
         };
 
-        let input_files : Vec<(&String, &String)> = input_files_vec
-                                                    .iter()
-                                                    .map(|file| (&file.0, &file.1))
-                                                    .collect();
+        let input_files: Vec<(&String, &String)> = input_files_vec.iter()
+            .map(|file| (&file.0, &file.1))
+            .collect();
 
         let mut lex = Lexer::from_dir(module_conf.sub_dir("lex"), self.is_verbose);
-        lex.set_ignore_whitespace(module_opts.options.strip_whitespace.unwrap_or(false));
+        lex.set_ignore_whitespace(module_opts.options.strip_whitespace.unwrap_or(true));
         // let s : String = "RIGHTLY data #\nVERILY \"hello\" + data #".into();
 
         let mut tokens : Vec<(&String, Vec<Token>)> = Vec::new();
